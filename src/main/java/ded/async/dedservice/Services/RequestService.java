@@ -1,5 +1,7 @@
 package ded.async.dedservice.Services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import ded.async.dedservice.DTOs.RequestDTO;
@@ -16,5 +18,9 @@ public class RequestService {
         return requestRepository.save(Request.builder()
             .requestData(requestDTO.getRequestData())
             .build());
+    }
+
+    public List<Request> read(){
+        return requestRepository.findAll();
     }
 }
