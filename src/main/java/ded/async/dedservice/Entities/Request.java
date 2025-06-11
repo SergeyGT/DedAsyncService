@@ -1,5 +1,7 @@
 package ded.async.dedservice.Entities;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +23,6 @@ public class Request {
     private Long id;
 
     @Column(columnDefinition = "jsonb")
-    private String requestData;
+    private JsonNode requestData;
 
 }
