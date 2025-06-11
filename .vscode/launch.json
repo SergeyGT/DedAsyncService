@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-DedserviceApplication<dedservice>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "ded.async.dedservice.DedserviceApplication",
+            "projectName": "dedservice",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
