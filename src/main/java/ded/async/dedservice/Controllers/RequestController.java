@@ -23,7 +23,10 @@ public class RequestController {
 
     @PostMapping("/create")
     public ResponseEntity<Request> create(@RequestBody RequestDTO requestDTO){
-        return new ResponseEntity<>(requestService.create(requestDTO), HttpStatus.OK);
+       Request request = Request.builder()
+            .requestData(requestDTO.getRequestData())
+            .build();
+        requestService.create();
     }
 
     @GetMapping("/read")
