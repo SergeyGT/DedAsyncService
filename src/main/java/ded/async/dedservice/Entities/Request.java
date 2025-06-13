@@ -24,7 +24,7 @@ public class Request {
     private Long id;
 
     @Type(JsonBinaryType.class)
-    @Column(columnDefinition = "jsonb", nullable = false)
+    @Column(columnDefinition = "jsonb")
     private JsonNode requestData;
 
 }

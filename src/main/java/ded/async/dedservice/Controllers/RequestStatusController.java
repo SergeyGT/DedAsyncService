@@ -2,10 +2,13 @@ package ded.async.dedservice.Controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import ded.async.dedservice.DTOs.RequestStatusDTO;
 import ded.async.dedservice.Services.RequestStatusService;
 import lombok.AllArgsConstructor;
+
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -14,8 +17,11 @@ public class RequestStatusController {
     private final RequestStatusService requestStatusService;
 
     @GetMapping("/status/{id}")
-    public String getMethodName(@RequestParam String param) {
-        return new String();
+    public ResponseEntity<RequestStatusDTO>  getStatus(@PathVariable Long id) {
+       return requestStatusService.getLatestStatus(id)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
+       
     }
     
 }
