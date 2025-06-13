@@ -1,8 +1,9 @@
 package ded.async.dedservice.Controllers;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,11 +23,9 @@ public class RequestController {
     private final RequestService requestService;
 
     @PostMapping("/create")
-    public ResponseEntity<Request> create(@RequestBody RequestDTO requestDTO){
-       Request request = Request.builder()
-            .requestData(requestDTO.getRequestData())
-            .build();
-        requestService.create();
+    public ResponseEntity<Map<String, Long>> create(@RequestBody RequestDTO requestDTO){
+       Request createdRequest = requestService.create(requestDTO);
+       return ResponseEntity.ok(Collections.singletonMap("id", createdRequest.getId()));       
     }
 
     @GetMapping("/read")
