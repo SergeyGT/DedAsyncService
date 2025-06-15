@@ -17,18 +17,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
-
-
-
-@RestController("/status")
+@RestController
 @AllArgsConstructor
 public class RequestStatusController {
     private final RequestStatusService requestStatusService;
     private final RequestService requestService;
 
-    @GetMapping("/current/{id}")
+    @GetMapping("/status/current/{id}")
     public ResponseEntity<RequestStatusDTO> getStatus(@PathVariable Long id) {
        return requestStatusService.getLatestStatus(id)
         .map(ResponseEntity::ok)
@@ -36,7 +32,7 @@ public class RequestStatusController {
        
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/status/update/{id}")
     public ResponseEntity<RequestStatusDTO> updateStatus(@PathVariable Long id, @RequestBody Status status) {
         Optional<Request> request = requestService.findById(id);
         
@@ -47,7 +43,7 @@ public class RequestStatusController {
         return ResponseEntity.ok(updatedStatus);
     }
 
-    @GetMapping("/all/{id}")
+    @GetMapping("/status/all/{id}")
     public List<RequestStatusDTO> getAllStatus(@PathVariable Long id) {
         return requestStatusService.getStatusHistory(id);
     }
