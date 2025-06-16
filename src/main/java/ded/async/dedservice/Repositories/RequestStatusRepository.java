@@ -16,6 +16,8 @@ public interface RequestStatusRepository extends JpaRepository<RequestStatus, Lo
     // Получить всю историю статусов (от новых к старым)
     List<RequestStatus> findByRequestIdOrderByCreatedAtDesc(Long requestId);
 
-    @Query("SELECT rs FROM RequestStatus rs WHERE rs.status = CREATED ORDER BY rs.createdAt DESC LIMIT 1")
-    Optional<RequestStatus> findLatestByStatusCreated();
+    @Query("SELECT rs FROM RequestStatus rs " +
+           "WHERE rs.status = 'CREATED' " +
+           "AND rs.createdAt = (SELECT MAX(rs2.createdAt) FROM RequestStatus rs2 WHERE rs2.request = rs.request)")
+    List<RequestStatus> findAllWithLatestStatusCreated();
 }

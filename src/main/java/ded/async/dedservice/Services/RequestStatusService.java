@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class RequestStatusService {
 
     private final RequestStatusRepository statusRepository;
-    private final int delayBetweenStatusChanger = 10000;
+    private final int delayBetweenStatusChanges = 3000;
     private Logger log;
 
     private static final List<Status> STATUS_SEQUENCE = Arrays.asList(
@@ -57,20 +57,20 @@ public class RequestStatusService {
     @Async
     @Scheduled(fixedDelayString =  "${status.change.delay}")
     public void proccessRequest() throws InterruptedException{
-        Optional<RequestStatus> createdStatusOpt = statusRepository.findLatestByStatusCreated();
+        List<RequestStatus> createdRequests = statusRepository.findAllWithLatestStatusCreated();
 
-        if (!createdStatusOpt.isPresent()) {
-            log.info("No request with CREATED status found");
+        if (createdRequests.isEmpty()) {
+            log.info("No requests with CREATED status found");
             return;
         }
-        
-        RequestStatus createdStatus = createdStatusOpt.get();
 
-        RequestStatusDTO changerDto;
-
-        for(int i = 0; i < STATUS_SEQUENCE.size(); i++){
-            Thread.sleep(delayBetweenStatusChanger);
-            changerDto = addStatus(createdStatus.getRequest(), STATUS_SEQUENCE.get(i));
+        for (RequestStatus createdStatus : createdRequests) {
+            Request request = createdStatus.getRequest();
+            
+            for (Status nextStatus : STATUS_SEQUENCE) {
+                Thread.sleep(delayBetweenStatusChanges);
+                addStatus(request, nextStatus);
+            }
         }
     }
     
