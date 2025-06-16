@@ -5,6 +5,7 @@ import ded.async.dedservice.Entities.Request;
 import ded.async.dedservice.Entities.RequestStatus;
 import ded.async.dedservice.Entities.Status;
 import ded.async.dedservice.Repositories.RequestStatusRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.scheduling.annotation.Async;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Semaphore;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,8 @@ import java.util.stream.Collectors;
 public class RequestStatusService {
 
     private final RequestStatusRepository statusRepository;
-    private final int delayBetweenStatusChanges = 3000;
+    private final int delayBetweenStatusChanges = 5000;
+    private final Semaphore procSemaphore = new Semaphore(5);   
     private Logger log;
 
     private static final List<Status> STATUS_SEQUENCE = Arrays.asList(
@@ -55,6 +58,7 @@ public class RequestStatusService {
     }
 
     @Async
+    @Transactional
     @Scheduled(fixedDelayString =  "${status.change.delay}")
     public void proccessRequest() throws InterruptedException{
         List<RequestStatus> createdRequests = statusRepository.findAllWithLatestStatusCreated();
@@ -65,11 +69,22 @@ public class RequestStatusService {
         }
 
         for (RequestStatus createdStatus : createdRequests) {
-            Request request = createdStatus.getRequest();
-            
-            for (Status nextStatus : STATUS_SEQUENCE) {
-                Thread.sleep(delayBetweenStatusChanges);
-                addStatus(request, nextStatus);
+            procSemaphore.acquire();
+            try {
+                Request request = createdStatus.getRequest();
+
+                Optional<RequestStatus> currentStatus = statusRepository.findLatestByRequestId(request.getId());
+
+                if (currentStatus.isEmpty() || currentStatus.get().getStatus() != Status.CREATED) {
+                    continue;
+                }
+
+                for (Status nextStatus : STATUS_SEQUENCE) {
+                    Thread.sleep(delayBetweenStatusChanges);
+                    addStatus(request, nextStatus);
+                }
+            } finally {
+                procSemaphore.release();
             }
         }
     }
