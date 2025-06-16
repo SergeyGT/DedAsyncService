@@ -40,7 +40,7 @@ public class RequestStatusController {
 
         RequestStatusDTO updatedStatus  = requestStatusService.addStatus(request.get(), status);
 
-        return ResponseEntity.ok(updatedStatus);
+        return ResponseEntity.ok(updatedStatus);    
     }
 
     @GetMapping("/status/all/{id}")

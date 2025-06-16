@@ -10,6 +10,6 @@ public enum Status {
     PROCESSING, 
     @JsonProperty("completed")
     COMPLETED, 
-    @JsonProperty("pending")
+    @JsonProperty("failed")
     FAILED
 }
