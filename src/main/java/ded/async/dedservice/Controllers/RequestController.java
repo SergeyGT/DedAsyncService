@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import ded.async.dedservice.DTOs.RequestDTO;
@@ -20,19 +21,20 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 @RestController
+@RequestMapping("/requests")
 @AllArgsConstructor
 public class RequestController {
     private final RequestService requestService;
     private final RequestStatusService requestStatusService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<Map<String, Long>> create(@RequestBody RequestDTO requestDTO){
        Request createdRequest = requestService.create(requestDTO);
        requestStatusService.addStatus(createdRequest, Status.CREATED);
        return ResponseEntity.ok(Collections.singletonMap("id", createdRequest.getId()));       
     }
 
-    @GetMapping("/read")
+    @GetMapping
     public List<Request> read() {
         return requestService.read();
     }
