@@ -25,12 +25,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @AllArgsConstructor
 public class RequestController {
     private final RequestService requestService;
-    private final RequestStatusService requestStatusService;
 
     @PostMapping
     public ResponseEntity<Map<String, Long>> create(@RequestBody RequestDTO requestDTO){
        Request createdRequest = requestService.create(requestDTO);
-       requestStatusService.addStatus(createdRequest, Status.CREATED);
        return ResponseEntity.ok(Collections.singletonMap("id", createdRequest.getId()));       
     }
 
