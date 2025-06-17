@@ -4,14 +4,11 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import ded.async.dedservice.Entities.Request;
-import ded.async.dedservice.Entities.Status;
-import jakarta.persistence.LockModeType;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long>{

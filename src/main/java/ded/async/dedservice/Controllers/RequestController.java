@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ded.async.dedservice.DTOs.RequestDTO;
 import ded.async.dedservice.Entities.Request;
-import ded.async.dedservice.Entities.Status;
 import ded.async.dedservice.Services.RequestService;
-import ded.async.dedservice.Services.RequestStatusService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
