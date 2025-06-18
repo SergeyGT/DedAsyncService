@@ -27,4 +27,8 @@ public class Request {
     @Column(columnDefinition = "jsonb")
     private JsonNode requestData;
 
+    @Column(name = "duplicate_count", nullable = false)
+    @Builder.Default
+    private Integer duplicateCount = 0;
+
 }

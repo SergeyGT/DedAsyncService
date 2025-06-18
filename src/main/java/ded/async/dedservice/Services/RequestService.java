@@ -32,16 +32,22 @@ public class RequestService {
         Optional<Request> searchRequest = requestRepository.findDuplicate(requestDTO.getRequestData().toString(), STATUS_TERMINAL);
 
         if(searchRequest.isPresent()){
-           System.out.println("Found duplicate request with id: " + searchRequest.get().getId());
+            System.out.println("Found duplicate request with id: " + searchRequest.get().getId());
             return searchRequest.get();
         }
 
-        Request createdRequest = requestRepository.save(Request.builder()
+        
+        Request createdRequest = Request.builder()
             .requestData(requestDTO.getRequestData())
-            .build());
+            .build();
 
+        Long completeDuplicateCount = requestRepository.countCompletedDuplicates(requestDTO.getRequestData().toString(), createdRequest.getId() != null ? createdRequest.getId() : -1L);
+        createdRequest.setDuplicateCount(completeDuplicateCount.intValue());
+        Request request = requestRepository.save(createdRequest);
+        
         requestStatusService.addStatus(createdRequest, Status.CREATED);
-        return createdRequest;
+        
+        return request;
     }
 
     public List<Request> read(){

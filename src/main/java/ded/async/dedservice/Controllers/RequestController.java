@@ -1,6 +1,7 @@
 package ded.async.dedservice.Controllers;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +26,12 @@ public class RequestController {
     private final RequestService requestService;
 
     @PostMapping
-    public ResponseEntity<Map<String, Long>> create(@RequestBody RequestDTO requestDTO){
-       Request createdRequest = requestService.create(requestDTO);
-       return ResponseEntity.ok(Collections.singletonMap("id", createdRequest.getId()));       
+    public ResponseEntity<Map<String, Object>> create(@RequestBody RequestDTO requestDTO) {
+        Request createdRequest = requestService.create(requestDTO);
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", createdRequest.getId());
+        response.put("completedDuplicatesCount", createdRequest.getDuplicateCount());
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping

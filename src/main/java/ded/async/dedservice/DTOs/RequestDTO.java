@@ -7,4 +7,5 @@ import lombok.Data;
 @Data
 public class RequestDTO {
     private JsonNode requestData;
+    private Integer duplicateCount;
 }

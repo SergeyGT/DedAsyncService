@@ -32,5 +32,24 @@ public interface RequestRepository extends JpaRepository<Request, Long>{
       @Param("terminalStatuses") List<String> terminalStatuses
    );
 
+    @Query(value = """
+        SELECT COUNT(r.id) FROM request r
+        JOIN request_status rs ON r.id = rs.request_id
+        WHERE rs.id = (
+            SELECT rs2.id FROM request_status rs2
+            WHERE rs2.request_id = r.id
+            ORDER BY rs2.created_at DESC
+            LIMIT 1
+        )
+        AND rs.status = 'COMPLETED'
+        AND r.request_data::jsonb @> (:requestData)::jsonb
+        AND (:requestData)::jsonb @> r.request_data::jsonb
+        AND r.id != :excludeId
+    """, nativeQuery = true)
+    Long countCompletedDuplicates(
+        @Param("requestData") String requestData,
+        @Param("excludeId") Long excludeId
+    );
+
 } 
 
