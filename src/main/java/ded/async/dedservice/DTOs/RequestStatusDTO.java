@@ -11,9 +11,8 @@ public class RequestStatusDTO {
     private Long id;
     private Status status;
     private LocalDateTime createdAt;
-    private Long requestId; // ID связанного запроса
+    private Long requestId; 
 
-    // Для удобного маппинга из Entity
     public static RequestStatusDTO fromEntity(RequestStatus status) {
         RequestStatusDTO dto = new RequestStatusDTO();
         dto.setId(status.getId());
