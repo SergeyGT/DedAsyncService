@@ -10,6 +10,7 @@ import ded.async.dedservice.DTOs.RequestDTO;
 import ded.async.dedservice.Entities.Request;
 import ded.async.dedservice.Entities.Status;
 import ded.async.dedservice.Repositories.RequestRepository;
+import ded.async.dedservice.exception.ApiRequestException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
@@ -26,7 +27,7 @@ public class RequestService {
     @Transactional
     public Request create(RequestDTO requestDTO){
         if(requestDTO.getRequestData().isNull()){
-            throw new IllegalArgumentException("Empty Request data!");
+            throw new ApiRequestException("Empty Request data!");
         }
 
         Optional<Request> searchRequest = requestRepository.findDuplicate(requestDTO.getRequestData().toString(), STATUS_TERMINAL);
