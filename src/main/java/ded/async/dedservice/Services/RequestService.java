@@ -26,8 +26,8 @@ public class RequestService {
 
     @Transactional
     public Request create(RequestDTO requestDTO){
-        if(requestDTO.getRequestData().isNull()){
-            throw new ApiRequestException("Empty Request data!");
+        if(requestDTO.getRequestData().isEmpty() || requestDTO.getRequestData().isNull()){
+            throw new ApiRequestException("Empty or Null Request data!");
         }
 
         Optional<Request> searchRequest = requestRepository.findDuplicate(requestDTO.getRequestData().toString(), STATUS_TERMINAL);
