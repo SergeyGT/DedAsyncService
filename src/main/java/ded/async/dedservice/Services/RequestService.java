@@ -43,8 +43,10 @@ public class RequestService {
             .requestData(requestDTO.getRequestData())
             .build();
 
-        Long completeDuplicateCount = requestRepository.countCompletedDuplicates(requestDTO.getRequestData().toString(), createdRequest.getId() != null ? createdRequest.getId() : -1L);
-        createdRequest.setDuplicateCount(completeDuplicateCount.intValue());
+
+        //Long completeDuplicateCount = requestRepository.countCompletedDuplicates(requestDTO.getRequestData().toString(), createdRequest.getId() != null ? createdRequest.getId() : -1L);
+        // Как я понял, вот так надо оставить
+        createdRequest.setDuplicateCount(0);
         Request request = requestRepository.save(createdRequest);
         
         requestStatusService.addStatus(createdRequest, Status.CREATED);
