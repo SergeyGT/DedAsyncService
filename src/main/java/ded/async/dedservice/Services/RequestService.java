@@ -34,6 +34,7 @@ public class RequestService {
 
         if(searchRequest.isPresent()){
             System.out.println("Found duplicate request with id: " + searchRequest.get().getId());
+            searchRequest.get().setDuplicateCount(searchRequest.get().getDuplicateCount()+1);
             return searchRequest.get();
         }
 
