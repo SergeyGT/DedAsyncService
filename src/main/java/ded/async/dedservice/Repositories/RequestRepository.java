@@ -14,7 +14,7 @@ import ded.async.dedservice.Entities.Request;
 public interface RequestRepository extends JpaRepository<Request, Long>{
 
    //@Lock(LockModeType.PESSIMISTIC_WRITE)
-   @Query(value = """
+    @Query(value = """
       SELECT r.* FROM request r
       JOIN request_status rs ON r.id = rs.request_id
       WHERE rs.id = (
@@ -24,11 +24,10 @@ public interface RequestRepository extends JpaRepository<Request, Long>{
          LIMIT 1
       )
       AND rs.status NOT IN (:terminalStatuses)
-      AND r.request_data::jsonb @> (:requestData)::jsonb
-      AND (:requestData)::jsonb @> r.request_data::jsonb
+      AND r.request_hash = :requestHash
    """, nativeQuery = true)
    Optional<Request> findDuplicate(
-      @Param("requestData") String requestData,
+      @Param("requestHash") String requestHash,
       @Param("terminalStatuses") List<String> terminalStatuses
    );
 

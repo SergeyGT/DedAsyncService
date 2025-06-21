@@ -26,29 +26,31 @@ public class RequestService {
 
     @Transactional
     public Request create(RequestDTO requestDTO){
-        if(requestDTO.getRequestData().isEmpty() || requestDTO.getRequestData().isNull()){
+        if(requestDTO.getRequestData().isEmpty() || requestDTO.getRequestData().isNull()) {
             throw new ApiRequestException("Empty or Null Request data!");
         }
 
-        Optional<Request> searchRequest = requestRepository.findDuplicate(requestDTO.getRequestData().toString(), STATUS_TERMINAL);
+        String requestHash = requestDTO.getRequestHash();
+        String normalizedData = requestDTO.getNormalizedRequestData();
 
-        if(searchRequest.isPresent()){
+        Optional<Request> searchRequest = requestRepository.findDuplicate(
+            requestHash, 
+            STATUS_TERMINAL
+        );
+
+        if(searchRequest.isPresent()) {
             System.out.println("Found duplicate request with id: " + searchRequest.get().getId());
             searchRequest.get().setDuplicateCount(searchRequest.get().getDuplicateCount()+1);
-            return searchRequest.get();
+            return requestRepository.save(searchRequest.get());
         }
 
-        
         Request createdRequest = Request.builder()
-            .requestData(requestDTO.getRequestData())
+            .normalizedRequestData(normalizedData)
+            .requestHash(requestHash)
+            .duplicateCount(0)
             .build();
 
-
-        //Long completeDuplicateCount = requestRepository.countCompletedDuplicates(requestDTO.getRequestData().toString(), createdRequest.getId() != null ? createdRequest.getId() : -1L);
-        // Как я понял, вот так надо оставить
-        createdRequest.setDuplicateCount(0);
         Request request = requestRepository.save(createdRequest);
-        
         requestStatusService.addStatus(createdRequest, Status.CREATED);
         
         return request;
