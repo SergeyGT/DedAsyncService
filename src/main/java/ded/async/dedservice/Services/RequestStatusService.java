@@ -73,12 +73,6 @@ public class RequestStatusService {
             try {
                 Request request = createdStatus.getRequest();
 
-                Optional<RequestStatus> currentStatus = statusRepository.findLatestByRequestId(request.getId());
-
-                if (currentStatus.isEmpty() || currentStatus.get().getStatus() != Status.CREATED) {
-                    continue;
-                }
-
                 for (Status nextStatus : STATUS_SEQUENCE) {
                     Thread.sleep(delayBetweenStatusChanges);
                     addStatus(request, nextStatus);
