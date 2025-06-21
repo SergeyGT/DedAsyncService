@@ -22,7 +22,7 @@ public class Request {
     @Column(name = "normalized_request_data", columnDefinition = "text", nullable = false)
     private String normalizedRequestData;
 
-    @Column(name = "request_hash", nullable = false, unique = true, length = 64)
+    @Column(name = "request_hash", nullable = false,  length = 64)
     private String requestHash;
 
     @Column(name = "duplicate_count", nullable = false)

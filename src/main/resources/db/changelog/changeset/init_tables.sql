@@ -3,6 +3,7 @@ CREATE TABLE request (
     normalized_request_data TEXT NOT NULL DEFAULT '',
     request_hash VARCHAR(64) NOT NULL DEFAULT '',
     duplicate_count INTEGER NOT NULL DEFAULT 0,
+    CONSTRAINT uk_request_hash UNIQUE (request_hash)
 );
 
 CREATE TABLE request_status (

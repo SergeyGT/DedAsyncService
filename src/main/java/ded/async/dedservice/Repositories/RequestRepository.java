@@ -30,7 +30,6 @@ public interface RequestRepository extends JpaRepository<Request, Long>{
       @Param("requestHash") String requestHash,
       @Param("terminalStatuses") List<String> terminalStatuses
    );
-
     // @Query(value = """
     //     SELECT COUNT(r.id) FROM request r
     //     JOIN request_status rs ON r.id = rs.request_id

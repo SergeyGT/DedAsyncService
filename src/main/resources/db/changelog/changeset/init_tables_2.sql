@@ -1,0 +1,1 @@
+ALTER TABLE request DROP CONSTRAINT IF EXISTS uk_request_hash;
