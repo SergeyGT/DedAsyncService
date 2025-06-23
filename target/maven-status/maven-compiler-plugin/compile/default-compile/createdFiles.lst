@@ -1,0 +1,7 @@
+ded\async\dedservice\Entities\Request$RequestBuilder.class
+ded\async\dedservice\DTOs\RequestDTO.class
+ded\async\dedservice\Services\RequestService.class
+ded\async\dedservice\DedserviceApplication.class
+ded\async\dedservice\Repositories\RequestRepository.class
+ded\async\dedservice\Controllers\RequestController.class
+ded\async\dedservice\Entities\Request.class
