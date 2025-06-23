@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changeset/init_tables.sql
   - include:
       file: db/changelog/changeset/init_tables_2.sql
+  - include:
+      file: db/changelog/changeset/init_tables_3.sql
