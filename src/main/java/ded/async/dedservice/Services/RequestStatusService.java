@@ -4,6 +4,7 @@ import ded.async.dedservice.DTOs.RequestStatusDTO;
 import ded.async.dedservice.Entities.Request;
 import ded.async.dedservice.Entities.RequestStatus;
 import ded.async.dedservice.Entities.Status;
+import ded.async.dedservice.Repositories.RequestRepository;
 import ded.async.dedservice.Repositories.RequestStatusRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 public class RequestStatusService {
 
     private final RequestStatusRepository statusRepository;
+    private final RequestRepository requestRepository;
     private final int delayBetweenStatusChanges = 5000;
     private final Semaphore procSemaphore = new Semaphore(5);   
     private Logger log;
@@ -42,6 +44,10 @@ public class RequestStatusService {
             .build();
 
         RequestStatus savedStatus = statusRepository.save(newStatus);
+
+        request.setLastStatus(savedStatus);
+        requestRepository.save(request);
+
         return RequestStatusDTO.fromEntity(savedStatus);
     }
 
@@ -72,12 +78,6 @@ public class RequestStatusService {
             procSemaphore.acquire();
             try {
                 Request request = createdStatus.getRequest();
-
-                Optional<RequestStatus> currentStatus = statusRepository.findLatestByRequestId(request.getId());
-
-                if (currentStatus.isEmpty() || currentStatus.get().getStatus() != Status.CREATED) {
-                    continue;
-                }
 
                 for (Status nextStatus : STATUS_SEQUENCE) {
                     Thread.sleep(delayBetweenStatusChanges);
