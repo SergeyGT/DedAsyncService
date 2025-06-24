@@ -35,4 +35,5 @@ public class Request {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "last_status_id")
     private RequestStatus lastStatus;
+    
 }
